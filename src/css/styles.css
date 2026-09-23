@@ -316,4 +316,6 @@ details.rule .rb { padding: 0 14px 14px; display: grid; gap: 8px; font-size: 14.
 .i-lbl { fill: var(--ink-2); font: 500 12px var(--font); }
 .i-ok { fill: var(--ok); font: 700 13px var(--font); }
 .i-no { fill: var(--bad); font: 700 13px var(--font); }
+.i-warn { fill: var(--warn); font: 700 13px var(--font); }
+.i-dry { fill: #ECE8D8; stroke: var(--ink); stroke-width: 1.2; }
 .i-l1 { fill: var(--leaf); } .i-l2 { fill: var(--citrus); } .i-l3 { fill: var(--card); stroke: var(--ink-3); stroke-width: 1.2; }

@@ -50,6 +50,15 @@
     for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2, k = i % 2 ? 0.9 : 1; pts.push(`${(cx + Math.cos(a) * rx * k).toFixed(1)},${(cy + Math.sin(a) * ry * k).toFixed(1)}`); }
     return `M${pts.join(' L')} Z`;
   }
+  // עזרים לאיורים: כיתוב דו-שורתי, אתרוג בקנה מידה, ראש אתרוג, ביצה, ציפורן, קן הדס
+  const cap = (x, y, l1, l2, cls = 'i-lbl') => T(x, y, l1) + (l2 ? T(x, y + 15, l2, cls) : '');
+  const etrogAt = (cx, cy, s, fill) => `<g transform="translate(${cx} ${cy}) scale(${s}) translate(-160 -145)"><path class="i-citrus" d="${etrogPath}" vector-effect="non-scaling-stroke"${fill ? ` style="fill:${fill}"` : ''}/><rect class="i-wood" x="157" y="38" width="6" height="24" rx="2"/><rect class="i-wood" x="157" y="228" width="6" height="16" rx="2"/></g>`;
+  const etrogTop = x => `<path class="i-citrus" d="M${x - 52},150 C${x - 52},96 ${x - 22},62 ${x},60 C${x + 22},62 ${x + 52},96 ${x + 52},150 Z"/>`;
+  const egg = (cx, cy) => `<ellipse cx="${cx}" cy="${cy}" rx="19" ry="25" fill="var(--card)" stroke="var(--ink)" stroke-width="1.6"/>${T(cx, cy + 4, 'ביצה')}`;
+  const nail = (cx, cy) => `<path d="M${cx - 14},${cy + 22} L${cx - 14},${cy - 8} Q${cx - 14},${cy - 24} ${cx},${cy - 24} Q${cx + 14},${cy - 24} ${cx + 14},${cy - 8} L${cx + 14},${cy + 22}" fill="#F3D9C8" stroke="var(--ink)" stroke-width="1.6"/><path d="M${cx - 10},${cy - 6} Q${cx},${cy - 20} ${cx + 10},${cy - 6} L${cx + 10},${cy + 8} L${cx - 10},${cy + 8} Z" fill="#FBEDE4" stroke="var(--ink-3)" stroke-width="1"/>`;
+  const leafE = (cx, cy, rot, k, cls) => `<ellipse class="${cls}" cx="${cx}" cy="${cy}" rx="${14 * k}" ry="${5.5 * k}" transform="rotate(${rot} ${cx} ${cy})"/>`;
+  const node = (x, y, n, k = 1, cls = 'i-leaf') => (n >= 1 ? leafE(x - 13 * k, y, -28, k, cls) : '') + (n >= 2 ? leafE(x + 13 * k, y, 28, k, cls) : '') + (n >= 3 ? `<ellipse class="${cls}" cx="${x}" cy="${y - 8 * k}" rx="${5.5 * k}" ry="${13 * k}"/>` : '');
+  const node3 = (x, y, k = 1, cls = 'i-leaf') => node(x, y, 3, k, cls);
   const ILL = {
     etrog: () => svg('0 0 320 252', 'חלקי האתרוג: שושנתא, דד, חוטם ועוקץ',
       `<defs><clipPath id="cpE"><path d="${etrogPath}"/></clipPath></defs>
@@ -151,7 +160,107 @@
       <path class="i-leaf" d="${serrated(85, 96, 44, 56, 44)}"/>
       ${T(235, 222, 'ערבה — עלה משוך, שפה חלקה', 'i-ok')}${T(235, 238, 'קנה אדום (או ירוק)')}
       ${T(85, 222, 'צפצפה — פסולה', 'i-no')}${T(85, 238, 'עלה עגול, שפה כמסור, קנה לבן')}`),
+    // ── איורים נוספים: אתרוג ──
+    etrogShape: () => svg('0 0 320 200', 'צורת אתרוג רגילה מול עגול ככדור ומול אתרוג אצבעות',
+      `${etrogAt(265, 88, 0.5)}
+       <circle class="i-citrus" cx="160" cy="92" r="42"/><rect class="i-wood" x="157" y="42" width="6" height="10" rx="2"/>
+       <ellipse class="i-citrus" cx="55" cy="112" rx="38" ry="30"/>
+       ${[-26, -13, 0, 13, 26].map((d, i) => `<ellipse class="i-citrus" cx="${55 + d}" cy="${70 + Math.abs(d) * 0.5}" rx="6" ry="${22 - i % 2 * 4}" transform="rotate(${d * 0.6} ${55 + d} ${80})"/>`).join('')}
+       ${cap(265, 170, 'צורה רגילה (גם עקום)', 'כשר', 'i-ok')}${cap(160, 170, 'עגול ככדור', 'פסול', 'i-no')}${cap(55, 170, 'אתרוג "אצבעות"', 'פסול', 'i-no')}`),
+    etrogSize: () => svg('0 0 320 190', 'אתרוג מול ביצה: גדול ממנה מול קטן ממנה',
+      `${etrogAt(232, 88, 0.56)}${egg(290, 118)}
+       ${etrogAt(62, 110, 0.24)}${egg(104, 110)}
+       <line class="i-dash" x1="160" y1="20" x2="160" y2="150"/>
+       ${cap(250, 170, 'גדול מביצה', 'כשר', 'i-ok')}${cap(75, 170, 'קטן מביצה', 'פסול', 'i-no')}`),
+    dadLeft: () => svg('0 0 320 196', 'מה נשאר מהדד: מעט עץ, חתוך בגובה האתרוג, או גומה',
+      `${etrogTop(265)}<rect class="i-wood" x="262" y="46" width="6" height="16" rx="2"/>
+       ${etrogTop(160)}<rect class="i-wood" x="154" y="57" width="12" height="4" rx="1.5"/>
+       ${etrogTop(55)}<ellipse cx="55" cy="63" rx="7" ry="4" fill="var(--ink)" opacity=".7"/>
+       ${cap(265, 170, 'נשאר מעט עץ', 'כשר, לא מהודר', 'i-ok')}${cap(160, 170, 'חתוך בגובה האתרוג', "פסול ביום א'", 'i-no')}${cap(55, 170, 'נוצרה גומה', 'פסול', 'i-no')}`),
+    dadNone: () => svg('0 0 320 190', 'אתרוג בלי דד: ראש חלק מול גומה',
+      `${etrogTop(230)}${etrogTop(90)}<ellipse cx="90" cy="63" rx="8" ry="4.5" fill="var(--ink)" opacity=".7"/>
+       <line class="i-thin" x1="110" y1="62" x2="140" y2="40"/>${T(150, 36, 'גומה')}
+       ${cap(230, 168, 'ראש חלק — כך גדל', 'כשר ומהודר', 'i-ok')}${cap(90, 168, 'גומה או שבר טרי', 'פסול', 'i-no')}`),
+    blat: () => svg('0 0 320 180', 'סימני שפשוף מעלים: שטוחים מול בולטים',
+      `<path class="i-citrus" d="M175,140 Q240,55 305,140 Z"/>
+       ${[[205, 108], [222, 94], [240, 89], [258, 94], [275, 108]].map(([x, y]) => `<path d="M${x - 6},${y + 2} L${x + 6},${y - 2}" stroke="var(--wood)" stroke-width="2" stroke-linecap="round"/>`).join('')}
+       <path class="i-citrus" d="M15,140 Q80,55 145,140 Z"/>
+       ${[[45, 106], [62, 92], [80, 86], [98, 92], [115, 106]].map(([x, y]) => `<circle cx="${x}" cy="${y - 3}" r="5" fill="var(--wood)" stroke="var(--ink)" stroke-width="1"/>`).join('')}
+       ${T(240, 30, 'מבט מהצד')}${T(80, 30, 'מבט מהצד')}
+       ${cap(240, 160, 'שטוח — לא מורגש', 'כשר', 'i-ok')}${cap(80, 160, 'בולט במישוש', 'להחמיר — פסול', 'i-no')}`),
+    etrogColor: () => svg('0 0 320 186', 'צבע האתרוג: צהוב, מתחיל להצהיב, ירוק כעשב',
+      `${etrogAt(265, 84, 0.46, '#F2CF4A')}
+       <defs><linearGradient id="gTurn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2CF4A"/><stop offset=".55" stop-color="#C9CF55"/><stop offset="1" stop-color="#8DB34E"/></linearGradient></defs>
+       ${etrogAt(160, 84, 0.46, 'url(#gTurn)')}${etrogAt(55, 84, 0.46, '#5E9C3F')}
+       ${cap(265, 166, 'צהוב', 'הידור', 'i-ok')}${cap(160, 166, 'מתחיל להצהיב', 'כשר', 'i-ok')}${cap(55, 166, 'ירוק כעשב', 'כשר אם יצהיב')}`),
+    etrogRed: () => svg('0 0 320 186', 'גוון כתום-אדמדם של אתרוג מול אדום ממש',
+      `${etrogAt(230, 84, 0.48, '#F0B545')}<ellipse cx="238" cy="100" rx="13" ry="20" fill="#E8843A" opacity=".45"/>
+       ${etrogAt(90, 84, 0.48, '#C53A2E')}
+       ${cap(230, 166, 'גוון כתום-אדמדם', 'כשר', 'i-ok')}${cap(90, 166, 'אדום ממש, על רובו', 'שאלת רב', 'i-warn')}`),
+    etrogSizes: () => svg('0 0 320 180', 'גודל האתרוג: קטן, בינוני, גדול',
+      `${etrogAt(272, 130 - 85 * 0.3, 0.3)}${etrogAt(165, 130 - 85 * 0.44, 0.44)}${etrogAt(55, 130 - 85 * 0.6, 0.6)}
+       <line class="i-thin" x1="15" y1="131" x2="305" y2="131"/>
+       ${cap(272, 156, 'קטן ממש', '')}${cap(165, 156, 'בינוני', 'מהודר', 'i-ok')}${cap(55, 156, 'גדול ממש', '')}`),
+
+    // ── איורים נוספים: הדס ──
+    hadasLen: () => {
+      const nodes = [220, 180, 140, 100, 60].map(y => node3(130, y)).join('');
+      return svg('0 0 320 262', 'מדידת ענף ההדס: העץ בלבד, בלי העלים שמעל קצהו',
+        `<line class="i-spine" x1="130" y1="244" x2="130" y2="44" stroke-width="3"/>${nodes}
+         <line class="i-ink" x1="215" y1="244" x2="215" y2="44" stroke-width="1.6"/>
+         ${[[244, '0'], [84, '24 ס"מ'], [44, '30 ס"מ']].map(([y, t]) => `<line class="i-ink" x1="207" y1="${y}" x2="223" y2="${y}" stroke-width="1.6"/>${T(262, y + 4, t, y === 84 ? 'i-ok' : 'i-lbl')}`).join('')}
+         ${T(262, 100, 'השיעור')}${T(262, 60, 'הידור (חזו"א)')}
+         <line class="i-dash" x1="140" y1="44" x2="207" y2="44"/><line class="i-dash" x1="140" y1="244" x2="207" y2="244"/>
+         <line class="i-thin" x1="118" y1="34" x2="100" y2="34"/>${T(46, 26, 'עלים מעל הקצה')}${T(46, 42, 'לא נמדדים')}
+         ${T(52, 250, 'מודדים את העץ')}`);
+    },
+    hadasFell: () => svg('0 0 320 190', 'קן עם שלושה עלים, עם שניים, ועם אחד',
+      `${[265, 160, 55].map(x => `<line class="i-spine" x1="${x}" y1="140" x2="${x}" y2="40" stroke-width="3"/>`).join('')}
+       ${node3(265, 95, 1.3)}${node(160, 95, 2, 1.3)}${node(55, 95, 1, 1.3)}
+       ${cap(265, 164, '3 עלים בקן', 'כשר', 'i-ok')}${cap(160, 164, 'נשר עלה — 2 בקן', 'ברוב הענף: פסול', 'i-no')}${cap(55, 164, 'נשאר עלה אחד', 'פסול', 'i-no')}`),
+    hadasTip: () => svg('0 0 320 196', 'ראש ההדס: שלם, נשרו רק עלים, העץ קטום',
+      `<line class="i-spine" x1="265" y1="150" x2="265" y2="46" stroke-width="3"/>${node3(265, 130)}${node3(265, 92)}${node3(265, 56)}
+       <line class="i-spine" x1="160" y1="150" x2="160" y2="40" stroke-width="3"/>${node3(160, 130)}${node3(160, 92)}
+       <line class="i-spine" x1="55" y1="150" x2="55" y2="62" stroke-width="3"/>${node3(55, 130)}${node3(55, 92)}
+       <line x1="45" y1="60" x2="65" y2="60" stroke="var(--bad)" stroke-width="2.5" stroke-linecap="round"/>
+       ${cap(265, 172, 'שלם', 'כשר', 'i-ok')}${cap(160, 172, 'נשרו עלים, העץ שלם', 'כשר', 'i-ok')}${cap(55, 172, 'העץ קטום', 'פסול', 'i-no')}`),
+    hadasLeaf: () => svg('0 0 320 180', 'גודל עלה ההדס לעומת ציפורן האגודל',
+      `${nail(262, 80)}<ellipse class="i-leaf" cx="222" cy="80" rx="10" ry="16"/>
+       ${nail(100, 80)}<ellipse class="i-leaf" cx="50" cy="80" rx="20" ry="32"/>
+       ${T(262, 118, 'ציפורן')}${T(100, 118, 'ציפורן')}
+       ${cap(240, 152, 'כגודל הציפורן', 'כשר', 'i-ok')}${cap(75, 152, 'גדול ורחב ממנה', 'שאלת רב', 'i-warn')}`),
+    hadasCover: () => {
+      const up = (x, y, len) => `<ellipse class="i-leaf" cx="${x - 7}" cy="${y - len / 2}" rx="5" ry="${len / 2}" transform="rotate(-18 ${x - 7} ${y})"/><ellipse class="i-leaf" cx="${x + 7}" cy="${y - len / 2}" rx="5" ry="${len / 2}" transform="rotate(18 ${x + 7} ${y})"/>`;
+      return svg('0 0 320 210', 'עלים שחופים את כל העץ מול עץ חשוף בין הקינים',
+        `<line class="i-spine" x1="240" y1="176" x2="240" y2="30" stroke-width="3"/>${[170, 140, 110, 80, 50].map(y => up(240, y, 34)).join('')}
+         <line class="i-spine" x1="80" y1="176" x2="80" y2="30" stroke-width="3"/>${[170, 125, 80].map(y => up(80, y, 24)).join('')}
+         <path class="i-bad" d="M100,146 L100,128 M100,101 L100,84" stroke-dasharray="3 3"/>${T(126, 120, 'חשוף')}
+         ${cap(240, 192, 'חופים את כל העץ', 'הידור', 'i-ok')}${cap(80, 192, 'רווחים חשופים', 'כשר אם רובו מחופה')}`);
+    },
+    hadasBerries: () => {
+      const br = (pts, fill) => pts.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="${fill}" stroke="var(--ink)" stroke-width="1"/>`).join('');
+      return svg('0 0 320 196', 'ענבים בהדס: ירוקים, מעט שחורים, ורבים מהעלים',
+        `${[265, 160, 55].map(x => `<line class="i-spine" x1="${x}" y1="150" x2="${x}" y2="40" stroke-width="3"/>${node3(x, 130)}${node3(x, 90)}${node3(x, 50)}`).join('')}
+         ${br([[280, 112], [250, 72]], '#9BCB6B')}
+         ${br([[175, 112], [145, 70]], '#2A2230')}
+         ${br([[40, 112], [70, 110], [36, 72], [74, 70], [55, 108], [42, 36], [68, 34], [55, 72]], '#2A2230')}
+         ${cap(265, 172, 'ענבים ירוקים', 'כשר', 'i-ok')}${cap(160, 172, 'מעט שחורים', 'כשר', 'i-ok')}${cap(55, 172, 'שחורים ורבים', 'פסול', 'i-no')}`);
+    },
+    hadasDry: () => svg('0 0 320 196', 'עלים ירוקים, יבשים עם קן לח בראש, ויבשים לגמרי',
+      `${[265, 160, 55].map(x => `<line class="i-spine" x1="${x}" y1="150" x2="${x}" y2="40" stroke-width="3"/>`).join('')}
+       ${node3(265, 130)}${node3(265, 90)}${node3(265, 52)}
+       ${node3(160, 130, 1, 'i-dry')}${node3(160, 90, 1, 'i-dry')}${node3(160, 52)}
+       ${node3(55, 130, 1, 'i-dry')}${node3(55, 90, 1, 'i-dry')}${node3(55, 52, 1, 'i-dry')}
+       ${cap(265, 172, 'ירוקים', 'כשר', 'i-ok')}${cap(160, 172, 'יבשים, בראש קן לח', 'כשר', 'i-ok')}${cap(55, 172, 'כולם הלבינו', 'פסול', 'i-no')}`),
+    hadasShoots: () => svg('0 0 320 200', 'פארה קטנה שיוצאת בין קיני ההדס',
+      `<line class="i-spine" x1="160" y1="186" x2="160" y2="24" stroke-width="3"/>${[170, 125, 80, 38].map(y => node3(160, y)).join('')}
+       <path d="M160,104 Q180,96 196,82" fill="none" stroke="var(--wood)" stroke-width="2.2" stroke-linecap="round"/>
+       <ellipse class="i-leaf" cx="200" cy="76" rx="4" ry="8" transform="rotate(30 200 76)"/><ellipse class="i-leaf" cx="190" cy="84" rx="3.5" ry="7" transform="rotate(-40 190 84)"/>
+       <circle cx="188" cy="88" r="22" class="i-dash"/>
+       <line class="i-thin" x1="210" y1="92" x2="236" y2="112"/>${T(262, 118, 'פארה בין הקינים')}${T(262, 134, 'לקטום — הידור', 'i-ok')}`),
   };
+
+  AM.ILL = ILL; // לבדיקות: גלריית איורים
 
   // ───────────── מצב ─────────────
   const S = {
