@@ -1,0 +1,13 @@
+{
+  "name": "arba-minim-checker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "בודק ארבעת המינים — סימולטור כשרות והידור לפי מקורות ההלכה שהוזנו",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node tests/validate.mjs && node tests/engine.test.mjs",
+    "check": "npm run build && npm test && git diff --exit-code -- index.html"
+  },
+  "engines": { "node": ">=18" }
+}

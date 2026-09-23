@@ -1,0 +1,13 @@
+{
+  "name": "בודק ארבעת המינים",
+  "short_name": "ארבעת המינים",
+  "description": "בדיקת כשרות והידור של אתרוג, לולב, הדס וערבה — לפי ההלכות שבמקורות בלבד",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F4F6F4",
+  "theme_color": "#1F7A4D",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
