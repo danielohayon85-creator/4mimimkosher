@@ -15,7 +15,7 @@ for (const [sp, def] of Object.entries(AM.species)) {
     if (!q.why) errs.push(`q ${q.id}: no why`);
     if (q.hk && !hids.has(q.hk)) errs.push(`q ${q.id}: bad hk`);
     for (const o of q.opts) {
-      for (const settings of [{ edah: 'sefardi' }, { edah: 'ashkenazi' }, {}]) {
+      for (const settings of [{ edah: 'sefardi' }, { edah: 'ashkenazi' }, { edah: 'chabad' }, {}]) {
         const fx = typeof o.fx === 'function' ? o.fx(settings) : o.fx;
         for (const f of fx) {
           if (f[0][0] === 'H') { if (!hids.has(f[1])) errs.push(`q ${q.id}/${o.v}: bad hiddur ${f[1]}`); }

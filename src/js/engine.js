@@ -5,7 +5,7 @@
   function kMarks(sp, answers, settings) {
     const marks = {};
     for (const q of AM.species[sp].questions) {
-      if (q.stage !== 'k' || (q.show && !q.show(answers)) || !(q.id in answers)) continue;
+      if (q.stage !== 'k' || (q.show && !q.show(answers, settings || {})) || !(q.id in answers)) continue;
       const opt = q.opts.find(o => o.v === answers[q.id]);
       if (!opt) continue;
       for (const f of fxOf(opt, settings)) if (f[0][0] === 'H') marks[f[1]] = f[0][1];
@@ -17,7 +17,7 @@
   function visible(sp, stage, answers, settings) {
     const pre = stage === 'h' ? kMarks(sp, answers, settings) : {};
     return AM.species[sp].questions.filter(q =>
-      q.stage === stage && (!q.show || q.show(answers)) && !(q.hk && q.hk in pre));
+      q.stage === stage && (!q.show || q.show(answers, settings || {})) && !(q.hk && q.hk in pre));
   }
 
   function progress(sp, stage, answers, settings) {
@@ -51,8 +51,10 @@
     return out;
   }
 
-  function score(sp, marks) {
-    const items = AM.species[sp].hiddur.map(h => ({ ...h, st: marks[h.id] || null }));
+  // מאפייני הידור עם edah נספרים רק במנהג הזה
+  function score(sp, marks, settings) {
+    const edah = (settings || {}).edah || '';
+    const items = AM.species[sp].hiddur.filter(h => !h.edah || h.edah === edah).map(h => ({ ...h, st: marks[h.id] || null }));
     const plus = items.filter(i => i.st === '+').length;
     const minus = items.filter(i => i.st === '-').length;
     const unknown = items.filter(i => i.st === '?').length;

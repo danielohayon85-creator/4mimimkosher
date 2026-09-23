@@ -60,4 +60,22 @@ t('arava levluv mark from k-stage', () => assert.equal(run('arava', { a_tip: 'le
 t('set not bound yet → K with note', () => { const { r } = run('set', { g_height: 'notyet' }); assert.equal(r.verdict, 'K'); assert.equal(r.notes.length, 1); });
 t('stars: 3/5 plus → 4 stars', () => assert.equal(E.score('etrog', { EH_yellow: '+', EH_size: '+', EH_dad: '+', EH_shosh: '-', EH_orla: '-' }).stars, 4));
 t('stars: 2/5 → 3 stars', () => assert.equal(E.score('etrog', { EH_yellow: '+', EH_size: '+', EH_dad: '-', EH_shosh: '-', EH_orla: '-' }).stars, 3));
+// ── מנהג חב"ד (מקור ג') ──
+const C = { edah: 'chabad' };
+t('chabad clean etrog → K, e_nose/e_body hidden', () => { const { a, r } = run('etrog', {}, C); assert.equal(r.verdict, 'K'); assert.ok(!('e_nose' in a) && !('e_body' in a) && 'e_spots_c' in a); });
+t('chabad top spot → P day1', () => { const { r } = run('etrog', { e_spots_c: 'top' }, C); assert.equal(r.verdict, 'P'); assert.ok(r.day1); });
+t('chabad one lower spot → K', () => assert.equal(run('etrog', { e_spots_c: 'one' }, C).r.verdict, 'K'));
+t('chabad mottled lower → S', () => assert.equal(run('etrog', { e_spots_c: 'two' }, C).r.verdict, 'S'));
+t('chabad spots around okets → K', () => assert.equal(run('etrog', { e_spots_c: 'okets' }, C).r.verdict, 'K'));
+t('chabad raised blettlach → K, EH_clean -', () => { const { r } = run('etrog', { e_blat: 'raised' }, C); assert.equal(r.verdict, 'K'); assert.equal(r.marks.EH_clean, '-'); });
+t('chabad suspected hole → P', () => assert.equal(run('etrog', { e_miss: 'unsure' }, C).r.verdict, 'P'));
+t('chabad no pitam, doubt → S', () => assert.equal(run('etrog', { e_dad: 'none', e_dad3: 'unk' }, C).r.verdict, 'S'));
+t('chabad green → K with warning', () => { const { r } = run('etrog', { e_green: 'green' }, C); assert.equal(r.verdict, 'K'); assert.ok(r.warn.length >= 1); });
+t('chabad lulav slightly open → K with warning', () => { const { r } = run('lulav', { l_split: 'little', l_two: 'no' }, C); assert.equal(r.verdict, 'K'); assert.ok(r.warn.length >= 1); });
+t('chabad kora yes → +', () => assert.equal(run('lulav', { lh_kora: 'yes' }, C).r.marks.LH_kora, '+'));
+t('chabad hiddur items counted only in chabad', () => {
+  const { r } = run('etrog', {}, C); assert.equal(r.marks.EH_calabria, '+');
+  assert.ok(E.score('etrog', r.marks, C).items.length > E.score('etrog', r.marks, {}).items.length);
+});
+t('chabad bundle uses 8cm question', () => { const { a } = run('set', {}, C); assert.ok('g_height_c' in a && !('g_height' in a)); });
 console.log(`\n${n} tests passed`);

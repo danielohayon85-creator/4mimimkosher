@@ -258,6 +258,157 @@
        <ellipse class="i-leaf" cx="200" cy="76" rx="4" ry="8" transform="rotate(30 200 76)"/><ellipse class="i-leaf" cx="190" cy="84" rx="3.5" ry="7" transform="rotate(-40 190 84)"/>
        <circle cx="188" cy="88" r="22" class="i-dash"/>
        <line class="i-thin" x1="210" y1="92" x2="236" y2="112"/>${T(262, 118, 'פארה בין הקינים')}${T(262, 134, 'לקטום — הידור', 'i-ok')}`),
+    // ── איורים נוספים: לולב ──
+    lulavTops: () => {
+      const fan = (x, tip) => [-18, -9, 0, 9, 18].map(d => tip(x + d * 0.55, x + d)).join('');
+      return svg('0 0 320 196', 'עלים עליונים: ישרים, רובם כפופים, מקופלים לשניים',
+        `${[265, 160, 55].map(x => `<line class="i-spine" x1="${x}" y1="150" x2="${x}" y2="96"/>`).join('')}
+         ${fan(265, (b, t) => `<path class="i-leafline" stroke-width="4" d="M${b},100 L${t},30"/>`)}
+         ${fan(160, (b, t) => `<path class="i-leafline" stroke-width="4" d="M${b},100 Q${t},44 ${t + (t < 160 ? -12 : 12)},52"/>`)}
+         ${fan(55, (b, t) => (t === 55 ? '' : `<path class="i-leafline" stroke-width="4" stroke-linejoin="round" d="M${b},100 L${t + (t < 55 ? -6 : 6)},50 L${t + (t < 55 ? -26 : 26)},84"/>`))}
+         ${cap(265, 172, 'לא כפופים', 'הידור', 'i-ok')}${cap(160, 172, 'רובם כפופים', 'כשר — עדיף אחר', 'i-warn')}${cap(55, 172, 'מקופלים לשניים', 'פסול', 'i-no')}`);
+    },
+    lulavUneven: () => {
+      const mid = (x, l, r) => `<line class="i-spine" x1="${x}" y1="160" x2="${x}" y2="112"/><path class="i-leaf" d="M${x - 1},114 L${x - 5},${l + 6} L${x - 1},${l} Z"/><path class="i-leaf" d="M${x + 1},114 L${x + 5},${r + 6} L${x + 1},${r} Z"/>`;
+      return svg('0 0 320 200', 'צידי העלה האמצעי: שווים, הפרש שהנמוך מגיע לרוב הגבוה, והנמוך קצר מחצי',
+        `${mid(265, 20, 20)}${mid(160, 20, 52)}${mid(55, 20, 84)}
+         <line class="i-dash" x1="30" y1="67" x2="80" y2="67"/>${T(22, 71, '½')}
+         ${cap(265, 178, 'שני הצדדים שווים', 'הידור', 'i-ok')}${cap(160, 178, 'הנמוך מגיע לרוב', 'כשר', 'i-ok')}${cap(55, 178, 'הנמוך קצר מחצי', 'שאלת רב', 'i-warn')}`);
+    },
+    lulavCut: () => {
+      const leaf = (x, top) => `<line class="i-spine" x1="${x}" y1="160" x2="${x}" y2="110"/>${lulavLeaves(x, 150, 150)}<path d="M${x - 4},112 L${x},${top} L${x + 4},112" fill="var(--leaf)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>`;
+      return svg('0 0 320 196', 'ראש העלה האמצעי: שלם עם הקוץ, נקטם רק הקוץ, קטום',
+        `${leaf(265, 34)}<line x1="265" y1="34" x2="265" y2="14" stroke="var(--ink)" stroke-width="1.2" stroke-linecap="round"/>
+         ${leaf(160, 34)}${leaf(55, 34)}
+         <path d="M${55 - 5},58 L${55 + 5},58" stroke="var(--bad)" stroke-width="2.5" stroke-linecap="round"/><rect x="48" y="30" width="14" height="27" fill="var(--card)"/>
+         <line class="i-thin" x1="272" y1="20" x2="296" y2="28"/>${T(302, 44, 'קוץ')}
+         ${cap(265, 176, 'שלם, כולל הקוץ', 'הידור', 'i-ok')}${cap(160, 176, 'נקטם רק הקוץ', 'כשר', 'i-ok')}${cap(55, 176, 'קטום, נראה ממרחק', 'פסול', 'i-no')}`);
+    },
+    lulavShrink: () => {
+      const zig = (x, y0, y1, amp, step) => { let d = `M${x},${y0}`; for (let y = y0, i = 0; y > y1; y -= step, i++) d += ` L${x + (i % 2 ? amp : -amp)},${y - step}`; return d; };
+      return svg('0 0 320 196', 'עלים חלקים, קמטים קטנים בראש, ולולב מכווץ',
+        `${[265, 160, 55].map(x => `<line class="i-spine" x1="${x}" y1="160" x2="${x}" y2="104"/>`).join('')}
+         <path class="i-leafline" d="M265,106 L265,20"/>
+         <path class="i-leafline" stroke-linejoin="round" d="M160,106 L160,52 ${zig(160, 52, 20, 2.5, 4).slice(1).replace(/^[^L]*/, '')}"/>
+         <path class="i-leafline" stroke-linejoin="round" d="${zig(55, 106, 46, 7, 8)}"/>
+         ${cap(265, 176, 'חלק', 'כשר', 'i-ok')}${cap(160, 176, 'קמטים קטנים בראש', 'כשר', 'i-ok')}${cap(55, 176, 'מכווץ ממש', 'פסול', 'i-no')}`);
+    },
+    lulavDroop: () => {
+      const side = (x, f) => [150, 128, 106, 84].map(y => f(x, y)).join('');
+      return svg('0 0 320 200', 'עלים צמודים לשדרה, פרודים, ותלויים כלפי מטה',
+        `${[265, 160, 55].map(x => `<line class="i-spine" x1="${x}" y1="166" x2="${x}" y2="30"/>`).join('')}
+         ${side(265, (x, y) => `<path class="i-leafline" stroke-width="4" d="M${x},${y} Q${x - 5},${y - 40} ${x - 6},${y - 60}"/><path class="i-leafline" stroke-width="4" d="M${x},${y} Q${x + 5},${y - 40} ${x + 6},${y - 60}"/>`)}
+         ${side(160, (x, y) => `<path class="i-leafline" stroke-width="4" d="M${x},${y} Q${x - 22},${y - 30} ${x - 34},${y - 46}"/><path class="i-leafline" stroke-width="4" d="M${x},${y} Q${x + 22},${y - 30} ${x + 34},${y - 46}"/>`)}
+         ${side(55, (x, y) => `<path class="i-leafline" stroke-width="4" d="M${x},${y - 20} Q${x - 30},${y - 26} ${x - 36},${y + 10}"/><path class="i-leafline" stroke-width="4" d="M${x},${y - 20} Q${x + 30},${y - 26} ${x + 36},${y + 10}"/>`)}
+         ${cap(265, 182, 'צמודים כשרביט', 'הידור', 'i-ok')}${cap(160, 182, 'פרודים מעט', 'לא מהודר')}${cap(55, 182, 'רובם תלויים', 'פסול', 'i-no')}`);
+    },
+    lulavPairs: () => {
+      const pair = (x, y, dx, dbl) => `<path class="i-leafline" stroke-width="3" d="M${x},${y} L${x + dx},${y - 44}"/>` + (dbl ? `<path class="i-leafline" stroke-width="3" d="M${x},${y} L${x + dx * 1.35},${y - 40}"/>` : '');
+      const lul = (x, f) => `<line class="i-spine" x1="${x}" y1="164" x2="${x}" y2="30"/>` + [150, 122, 94, 66].map(y => f(x, y)).join('');
+      return svg('0 0 320 200', 'עלים כפולים, עלים יחידים, וכל העלים בצד אחד',
+        `${lul(265, (x, y) => pair(x, y, -16, 1) + pair(x, y, 16, 1))}
+         ${lul(160, (x, y) => pair(x, y, -16, 0) + pair(x, y, 16, 0))}
+         ${lul(55, (x, y) => pair(x, y, 16, 1))}
+         ${cap(265, 182, 'כפולים', 'כשר', 'i-ok')}${cap(160, 182, 'רובם יחידים', 'פסול', 'i-no')}${cap(55, 182, 'כולם בצד אחד', 'פסול', 'i-no')}`);
+    },
+    lulavDry: () => svg('0 0 320 196', 'עלים ירוקים מול עלים שהלבינו',
+      `<line class="i-spine" x1="215" y1="160" x2="215" y2="100"/>${lulavLeaves(215, 150, 110, 20)}<path class="i-leafline" d="M215,102 L215,20"/>
+       <line class="i-spine" x1="105" y1="160" x2="105" y2="100"/><g style="--leaf:#DCD6BE">${lulavLeaves(105, 150, 110, 20)}<path class="i-leafline" d="M105,102 L105,20"/></g>
+       ${cap(215, 178, 'ירוקים', 'כשר', 'i-ok')}${cap(105, 178, 'רובם הלבינו', 'פסול', 'i-no')}`),
+    lulavTwo: () => svg('0 0 320 196', 'עלה אמצעי אחד מול שני עלים אמצעיים שאחד מהם נחלק',
+      `<line class="i-spine" x1="215" y1="160" x2="215" y2="108"/>${lulavLeaves(215, 150, 130, 20)}
+       <path d="M212,110 L215,20 L218,110" fill="var(--leaf)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+       <line class="i-spine" x1="105" y1="160" x2="105" y2="108"/>${lulavLeaves(105, 150, 130, 20)}
+       <path d="M110,110 L114,20 L117,110" fill="var(--leaf)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+       <path d="M98,110 L99,66 L90,24 M102,110 L101,66 L108,26" fill="none" stroke="var(--leaf)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+       ${cap(215, 178, 'עלה אמצעי אחד', 'לפי מידת הפתיחה')}${cap(105, 178, 'שניים, ואחד נחלק', 'פסול', 'i-no')}`),
+    lulavRed: () => svg('0 0 320 196', 'ראשי עלים ירוקים מול ראשי עלים אדומים משריפת שמש',
+      `<line class="i-spine" x1="215" y1="160" x2="215" y2="100"/>${lulavLeaves(215, 150, 110, 20)}<path class="i-leafline" d="M215,102 L215,20"/>
+       <line class="i-spine" x1="105" y1="160" x2="105" y2="100"/>${lulavLeaves(105, 150, 110, 20)}<path class="i-leafline" d="M105,102 L105,20"/>
+       <path class="i-kora" stroke-width="5" d="M105,40 L105,20 M89,52 L89,34 M121,52 L121,34 M86,72 L85,56 M124,72 L125,56"/>
+       ${cap(215, 178, 'ירוק עד הקצה', 'הידור', 'i-ok')}${cap(105, 178, 'קצוות אדומים', 'לא מהודר')}`),
+    // ── איורים נוספים: ערבה ──
+    ...(() => {
+      const leafA = (x, y, side, cls = 'i-leaf', len = 1) => `<path class="${cls}" d="M${x},${y} C${x + side * 8 * len},${y - 10 * len} ${x + side * 12 * len},${y - 26 * len} ${x + side * 10 * len},${y - 38 * len} C${x + side * 4 * len},${y - 26 * len} ${x + side * 1},${y - 12 * len} ${x},${y} Z"/>`;
+      const stem = (x, y0, y1) => `<line x1="${x}" y1="${y0}" x2="${x}" y2="${y1}" stroke="#B5322A" stroke-width="3" stroke-linecap="round"/>`;
+      const branch = (x, ys, f) => ys.map((y, i) => f(x, y, i % 2 ? 1 : -1, i)).join('');
+      const Y = [150, 130, 110, 90, 70, 50];
+      const L = (x, y, s) => leafA(x, y, s);
+      const tipBud = x => `<path class="i-leaf" d="M${x},34 C${x - 3},26 ${x - 2},16 ${x},10 C${x + 2},16 ${x + 3},26 ${x},34 Z"/>`;
+      return {
+        aravaLen: () => svg('0 0 320 262', 'מדידת הערבה עם סרגל: 24 ו-30 ס"מ',
+          `${stem(130, 244, 44)}${branch(130, [230, 200, 170, 140, 110, 80, 56], (x, y, s) => leafA(x, y, s))}
+           <line class="i-ink" x1="215" y1="244" x2="215" y2="44" stroke-width="1.6"/>
+           ${[[244, '0'], [84, '24 ס"מ'], [44, '30 ס"מ']].map(([y, t]) => `<line class="i-ink" x1="207" y1="${y}" x2="223" y2="${y}" stroke-width="1.6"/>${T(262, y + 4, t, y === 84 ? 'i-ok' : 'i-lbl')}`).join('')}
+           ${T(262, 100, 'השיעור')}${T(262, 60, 'הידור (חזו"א)')}
+           <line class="i-dash" x1="140" y1="44" x2="207" y2="44"/><line class="i-dash" x1="140" y1="244" x2="207" y2="244"/>
+           ${T(52, 250, 'מודדים את הקנה')}`),
+        aravaTip: () => svg('0 0 320 200', 'ראש הערבה: שלם עם לבלוב, נקטם רק הלבלוב, העץ קטום',
+          `${stem(265, 164, 34)}${branch(265, Y, L)}${tipBud(265)}
+           ${stem(160, 164, 34)}${branch(160, Y, L)}
+           ${stem(55, 164, 56)}${branch(55, Y.slice(0, 5), L)}<line x1="45" y1="55" x2="65" y2="55" stroke="var(--bad)" stroke-width="2.5" stroke-linecap="round"/>
+           ${cap(265, 182, 'שלם, עם לבלוב', 'הידור', 'i-ok')}${cap(160, 182, 'נקטם רק הלבלוב', 'כשר', 'i-ok')}${cap(55, 182, 'העץ קטום', 'פסול', 'i-no')}`),
+        aravaFell: () => svg('0 0 320 200', 'ערבה מלאה, נשרו מעט עלים, נשרו רוב העלים',
+          `${stem(265, 164, 36)}${branch(265, Y, L)}
+           ${stem(160, 164, 36)}${branch(160, Y, (x, y, s, i) => (i === 1 || i === 4 ? '' : leafA(x, y, s)))}
+           ${stem(55, 164, 36)}${branch(55, Y, (x, y, s, i) => (i === 2 ? leafA(x, y, s) : ''))}
+           ${cap(265, 182, 'לא נשר עלה', 'הידור', 'i-ok')}${cap(160, 182, 'נשרו מעט', 'כשר', 'i-ok')}${cap(55, 182, 'נשרו רובם', 'פסול', 'i-no')}`),
+        aravaTorn: () => {
+          const hang = (x, y, s) => `<path class="i-leaf" d="M${x},${y} C${x + s * 10},${y + 4} ${x + s * 22},${y + 16} ${x + s * 26},${y + 30} C${x + s * 16},${y + 20} ${x + s * 6},${y + 10} ${x},${y} Z"/>`;
+          const split = (x, y, s) => leafA(x, y, s).replace('i-leaf', 'i-leaf') + `<line x1="${x + s * 3}" y1="${y - 8}" x2="${x + s * 9}" y2="${y - 34}" stroke="var(--card)" stroke-width="2.5"/>`;
+          return svg('0 0 320 200', 'עלים שלמים, מיעוטם נפרצו, רובם נפרצו',
+            `${stem(265, 164, 36)}${branch(265, Y, L)}
+             ${stem(160, 164, 36)}${branch(160, Y, (x, y, s, i) => (i === 2 ? hang(x, y, s) : i === 4 ? split(x, y, s) : leafA(x, y, s)))}
+             ${stem(55, 164, 36)}${branch(55, Y, (x, y, s, i) => (i % 3 === 0 ? leafA(x, y, s) : i % 2 ? hang(x, y, s) : split(x, y, s)))}
+             ${cap(265, 182, 'שלמים ומחוברים', 'כשר', 'i-ok')}${cap(160, 182, 'מיעוטם נפרצו', 'כשר', 'i-ok')}${cap(55, 182, 'רובם נפרצו', 'פסול', 'i-no')}`);
+        },
+        aravaPart: () => {
+          const bite = (x, y, s) => `<circle cx="${x + s * 10}" cy="${y - 37}" r="9" fill="var(--card)"/>`;
+          return svg('0 0 320 200', 'עלים שלמים, חסר מעט מחלקם, חסר רוב העלה ברובם',
+            `${stem(265, 164, 36)}${branch(265, Y, L)}
+             ${stem(160, 164, 36)}${branch(160, Y, (x, y, s, i) => leafA(x, y, s) + (i === 1 || i === 4 ? bite(x, y, s) : ''))}
+             ${stem(55, 164, 36)}${branch(55, Y, (x, y, s, i) => (i === 3 ? leafA(x, y, s) : leafA(x, y, s, 'i-leaf', 0.4)))}
+             ${cap(265, 182, 'עלים שלמים', 'כשר', 'i-ok')}${cap(160, 182, 'חסר מעט', 'כשר', 'i-ok')}${cap(55, 182, 'חסר רוב העלה', 'ברוב העלים: פסול', 'i-no')}`);
+        },
+        aravaDry: () => {
+          const wilt = (x, y, s) => `<path class="i-leaf" d="M${x},${y} C${x + s * 12},${y - 6} ${x + s * 20},${y - 2} ${x + s * 22},${y + 18} C${x + s * 14},${y + 4} ${x + s * 6},${y + 2} ${x},${y} Z"/>`;
+          return svg('0 0 320 200', 'ערבה טרייה, כמושה, ויבשה ולבנה',
+            `${stem(265, 164, 36)}${branch(265, Y, L)}
+             ${stem(160, 164, 36)}${branch(160, Y, wilt)}
+             ${stem(55, 164, 36)}${branch(55, Y, (x, y, s) => leafA(x, y, s, 'i-dry'))}
+             ${cap(265, 182, 'טרייה', 'כשר', 'i-ok')}${cap(160, 182, 'כמושה, ירוקה', 'כשר', 'i-ok')}${cap(55, 182, 'הלבינו', 'פסול', 'i-no')}`);
+        },
+      };
+    })(),
+    // ── אגד ומנהג חב"ד ──
+    bundleHeight: (st = {}) => {
+      const ch = st.edah === 'chabad';
+      return svg('0 0 320 240', ch ? 'שדרת הלולב גבוהה ב-8 ס"מ לפחות מההדסים והערבות' : 'שדרת הלולב גבוהה בטפח לפחות מההדסים והערבות',
+        `<line class="i-spine" x1="160" y1="226" x2="160" y2="30"/>${lulavLeaves(160, 196, 120, 26)}
+         <path d="M157,32 L160,8 L163,32" fill="var(--leaf)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/>
+         <line x1="140" y1="226" x2="140" y2="96" stroke="#B5322A" stroke-width="3" stroke-linecap="round"/>
+         ${[200, 170, 140, 110].map(y => `<path class="i-leaf" d="M140,${y} C132,${y - 10} 128,${y - 24} 130,${y - 34} C136,${y - 24} 139,${y - 12} 140,${y} Z"/>`).join('')}
+         <line class="i-spine" x1="180" y1="226" x2="180" y2="96" stroke-width="3"/>${[206, 166, 126, 100].map(y => node3(180, y, 0.8)).join('')}
+         <rect x="126" y="206" width="68" height="12" rx="4" fill="var(--card-2)" stroke="var(--ink)" stroke-width="1.4"/>
+         <line class="i-dash" x1="118" y1="92" x2="236" y2="92"/><line class="i-dash" x1="166" y1="30" x2="236" y2="30"/>
+         <line class="i-ink" x1="228" y1="92" x2="228" y2="30" stroke-width="1.6"/>
+         ${T(272, 56, ch ? '8 ס"מ' : 'טפח', 'i-ok')}${T(272, 72, 'לפחות')}
+         ${T(56, 50, 'השדרה בולטת')}${T(56, 66, 'מעל ההדסים')}${T(56, 82, 'והערבות')}
+         ${T(56, 150, 'אם לא — מקצרים')}${T(56, 166, 'אותם מלמטה')}${T(56, 182, 'בלי לרדת מהשיעור')}`);
+    },
+    chabadZones: () => svg('0 0 320 250', 'אזורי הבדיקה באתרוג לפי מנהג חב"ד',
+      `<defs><clipPath id="cpZ"><path d="${etrogPath}"/></clipPath></defs>
+       <g transform="translate(-40 0)">
+         <path class="i-citrus" d="${etrogPath}"/>
+         <rect x="100" y="50" width="120" height="52" fill="var(--bad)" opacity=".2" clip-path="url(#cpZ)"/>
+         <line class="i-dash" x1="112" y1="102" x2="208" y2="102"/>
+         <rect class="i-wood" x="157" y="38" width="6" height="24" rx="2"/><rect class="i-wood" x="157" y="228" width="6" height="16" rx="2"/>
+         <circle cx="160" cy="226" r="20" class="i-dash"/>
+       </g>
+       <line class="i-thin" x1="170" y1="76" x2="206" y2="70"/>${T(262, 58, 'חלק עליון')}${T(262, 74, '(מהשיפוע ומעלה)')}${T(262, 90, 'נקודה — פסול', 'i-no')}
+       <line class="i-thin" x1="176" y1="160" x2="206" y2="152"/>${T(262, 136, 'חלק תחתון')}${T(262, 152, 'נקודה אחת — כשר', 'i-ok')}${T(262, 168, 'מנומר — לרב', 'i-warn')}
+       <line class="i-thin" x1="142" y1="230" x2="206" y2="222"/>${T(262, 216, 'סביב העוקץ')}${T(262, 232, 'אינו מעכב', 'i-ok')}
+       ${T(60, 30, 'ממרחק 40–50 ס"מ')}${T(60, 46, 'שני סיבובים')}`),
   };
 
   AM.ILL = ILL; // לבדיקות: גלריית איורים
@@ -268,7 +419,7 @@
     answers: {}, sheets: [], learnSp: 'etrog', quiz: null, reviewing: false,
     settings: { edah: store.get('am.edah') || '' },
   };
-  const EDAH = { sefardi: 'ספרדי', ashkenazi: 'אשכנזי', '': 'לא צוין' };
+  const EDAH = { sefardi: 'ספרדי', ashkenazi: 'אשכנזי', chabad: 'חב"ד', '': 'לא צוין' };
   const VERDICT = {
     K: { t: 'כשר לפי הנתונים שהוזנו וההלכות שבמקורות', lead: 'לא נמצא פסול או ספק בנתונים שהזנת.', icon: 'check' },
     S: { t: 'ספק — דורש שאלת רב', lead: 'יש כאן נקודה שהמקורות אינם מכריעים בה, או שחסר מידע. אל תכריע לבד — הצג את הפרטים לרב.', icon: 'alert' },
@@ -279,10 +430,11 @@
   const ans = () => (S.answers[S.sp] = S.answers[S.sp] || {});
 
   // ───────────── רכיבים ─────────────
-  const srcLabel = s => (s === 'B' ? "מקור ב'" : "מקור א'");
+  const srcLabel = s => (s === 'C' ? "מקור ג' (חב\"ד)" : s === 'B' ? "מקור ב'" : "מקור א'");
+  const srcRole = s => (s === 'C' ? 'מנהג חב"ד — מכריע כשנבחר מנהג חב"ד' : s === 'B' ? 'העיקר' : 'משלים');
   const srcChip = ([s, k]) => {
     const sec = AM.sources[s][k];
-    const short = s === 'B' ? sec.title.replace(/^(\S+) › \d+\. /, '$1 · ') : k;
+    const short = s === 'B' ? sec.title.replace(/^(\S+) › \d+\. /, '$1 · ') : s === 'C' ? k : k;
     return `<button class="src" data-act="src" data-s="${s}" data-k="${esc(k)}"><b>${srcLabel(s)}</b> · ${esc(short)}</button>`;
   };
   const srcChips = src => `<div class="srcs">${src.map(srcChip).join('')}</div>`;
@@ -329,7 +481,7 @@
         <button class="row" data-act="quiz">${badge('set').replace(ic('bundle'), ic('target'))}<span><span class="t">בחן אותי</span><br><span class="s">10 תרחישים: כשר, פסול או ספק?</span></span>${chev}</button>
         <button class="row" data-act="sources">${badge('set').replace(ic('bundle'), ic('doc'))}<span><span class="t">המקורות</span><br><span class="s">הטקסטים המלאים, מילה במילה</span></span>${chev}</button>
       </div>
-      <div class="fine"><p>כל תשובה נגזרת משני המקורות שהוזנו בלבד. מקור ב' הוא העיקר; מקור א' משלים נושאים שמקור ב' אינו דן בהם, ומכריע כשמקור ב' מביא דעות בלי הכרעה. האפליקציה אינה תחליף לשאלת רב.</p></div>
+      <div class="fine"><p>כל תשובה נגזרת מהמקורות שהוזנו בלבד. מקור ב' הוא העיקר; מקור א' משלים נושאים שמקור ב' אינו דן בהם, ומכריע כשמקור ב' מביא דעות בלי הכרעה. במנהג חב"ד מכריע מקור ג' — המדריך של מכון הלכה חב"ד. האפליקציה אינה תחליף לשאלת רב.</p></div>
       <footer class="credit">נבנה על ידי דניאל אוחיון לזיכוי הרבים, על בסיס מקורות הלכתיים מובהקים</footer>`;
   }
 
@@ -354,8 +506,8 @@
         <span class="kind ${S.stage}"><i></i>${S.stage === 'k' ? 'כשרות — חובה' : 'הידור — לא מעכב'}</span>
         <h2 class="qtitle" id="qt">${esc(q.q)}</h2>
         ${q.hint ? `<p class="hint">${esc(q.hint)}</p>` : ''}
-        ${q.img && ILL[q.img] ? `<div class="ill">${ILL[q.img]()}</div>` : ''}
         <button class="whybtn" data-act="why" data-q="${q.id}">${ic('info')}למה בודקים את זה?</button>
+        ${q.img && ILL[q.img] ? `<div class="ill">${ILL[q.img](S.settings)}</div>` : ''}
       </section>
       <div class="answers" role="group" aria-labelledby="qt">
         ${q.opts.map(o => { const [cls, sym, txt] = markOf(o.label);
@@ -400,7 +552,7 @@
   function hresult() {
     const def = spDef(S.sp);
     const r = E.evaluate(S.sp, ans(), S.settings);
-    const sc = E.score(S.sp, r.marks);
+    const sc = E.score(S.sp, r.marks, S.settings);
     const pct = sc.pct === null ? null : Math.round(sc.pct * 100);
     const lead = sc.determined === 0
       ? 'לא נקבע אף מאפיין הידור, ולכן הדירוג הוא הבסיסי: כשר.'
@@ -425,7 +577,7 @@
   function summary() {
     const rows = S.queue.map(sp => {
       const r = E.evaluate(sp, S.answers[sp] || {}, S.settings);
-      const sc = E.score(sp, r.marks);
+      const sc = E.score(sp, r.marks, S.settings);
       const st = r.verdict === 'P' ? 'ללא דירוג הידור' : `${'★'.repeat(sc.stars)} ${E.STAR_LABEL[sc.stars]}`;
       return { r, html: `<button class="tlrow" data-act="review" data-sp="${sp}">${badge(sp)}
         <span><span class="t">${spDef(sp).name}</span><br><span class="s">${st}</span></span><span class="pill ${r.verdict}">${PILL[r.verdict]}</span></button>` };
@@ -449,9 +601,10 @@
     const then = [];
     for (const q of def.questions) if (q.stage === 'k') for (const id of q.rules) {
       const r = AM.ruleById[id];
-      if (!seen.has(id) && r.lv !== 'hiddur' && r.lv !== 'info') { seen.add(id); then.push(r); }
+      if (!seen.has(id) && !r.edah && r.lv !== 'hiddur' && r.lv !== 'info') { seen.add(id); then.push(r); }
     }
-    const mine = AM.rules.filter(r => r.sp === sp);
+    const mine = AM.rules.filter(r => r.sp === sp && !r.edah);
+    const chabadRules = S.settings.edah === 'chabad' ? AM.rules.filter(r => r.edah === 'chabad' && (r.sp === sp || (sp === 'lulav' && r.sp === 'set'))) : [];
     const stops = mine.filter(r => r.lv === 'pasul' || r.lv === 'safek');
     const step = (n, cls, t, inner) => `<section class="lstep ${cls}"><span class="num">${n}</span><div><h3>${t}</h3><div class="body">${inner}</div></div></section>`;
     return appbar({ title: '<b>למד אותי לבדוק</b>' }) + `
@@ -462,6 +615,7 @@
         ${step(2, '', 'מה בודקים אחר כך', then.map(ruleCard).join(''))}
         ${step(3, 'stop', 'מה מעכב — סיכום מהיר', `<div class="chips">${stops.map(r => `<span class="chipx${r.lv === 'safek' ? ' S' : ''}">${esc(r.t)}</span>`).join('')}</div><p class="legend">אדום — פוסל · כתום — מחלוקת או חשש, שאלת רב</p>`)}
         ${step(4, 'gold', 'מה רק הידור — לא מעכב', mine.filter(r => r.lv === 'hiddur').map(ruleCard).join(''))}
+        ${chabadRules.length ? step('ח', 'gold', 'למנהג חב"ד — מקור ג\'', chabadRules.map(ruleCard).join('')) : ''}
         ${step('+', 'plus', 'הקלות וטיפים', mine.filter(r => r.lv === 'info').map(ruleCard).join(''))}
       </div>
       <div class="cta"><button class="btn primary" data-act="start" data-sp="${sp}">בדוק ${def.name} עכשיו</button></div>`;
@@ -504,7 +658,8 @@
       ${Object.values(AM.sources[s]).map(sec => `<details class="rule"><summary><span>${esc(sec.title)}</span>${chev}</summary><div class="rb"><p class="quote">${esc(sec.text)}</p></div></details>`).join('')}</div>`;
     return appbar({ title: '<b>המקורות</b>' }) + `<header class="page-h"><h2>המקורות</h2><p>הטקסטים המלאים שעליהם בנויה האפליקציה, מילה במילה.</p></header>
       ${block('B', "מקור ב' — העיקר", 'לולב, אתרוג, הדס וערבה. ההערות הממוספרות שבמקור לא נמסרו, ולכן הושמטו.')}
-      ${block('A', "מקור א' — משלים", 'הלכות לולב, סימנים תרמה–תרנ. בסימן תרמח אין סעיף כד במקור.')}`;
+      ${block('A', "מקור א' — משלים", 'הלכות לולב, סימנים תרמה–תרנ. בסימן תרמח אין סעיף כד במקור.')}
+      ${block('C', "מקור ג' — מנהג חב\"ד", 'מדריך מהיר של מכון הלכה חב"ד (תרשים זרימה). מופעל רק כשנבחר מנהג חב"ד.')}`;
   }
 
   // ───────────── גיליונות ─────────────
@@ -523,11 +678,13 @@
     }
     if (sh.type === 'src') {
       const sec = AM.sources[sh.s][sh.k];
-      return `<p class="eyebrow">${srcLabel(sh.s)} — ${sh.s === 'B' ? 'העיקר' : 'משלים'}</p><h3>${esc(sec.title)}</h3><p class="quote">${esc(sec.text)}</p>`;
+      return `<p class="eyebrow">${srcLabel(sh.s)} — ${srcRole(sh.s)}</p><h3>${esc(sec.title)}</h3><p class="quote">${esc(sec.text)}</p>`;
     }
     if (sh.type === 'edah') {
-      return `<p class="eyebrow">הגדרה</p><h3>המנהג שלך</h3><p class="body">משפיע על מאפיין הידור אחד בלבד: לולב עם קור"א (קליפה אדומה). ספרדים נהגו להדר בו; לאשכנזים עדיף לולב שתיומתו סגורה וגלויה, בלי קור"א.</p>
+      return `<p class="eyebrow">הגדרה</p><h3>המנהג שלך</h3><p class="body"><b>ספרדי / אשכנזי:</b> משפיע רק על הידור הקור"א (קליפה אדומה בראש הלולב). ספרדים נהגו להדר בו; לאשכנזים עדיף לולב שתיומתו סגורה וגלויה.</p>
         ${srcChips([['B', 'לולב 4']])}
+        <p class="body"><b>חב"ד:</b> מופעל מקור ג' — המדריך של מכון הלכה חב"ד — בכל נקודה שהוא מתייחס אליה: בדיקת נקודות באתרוג לפי אזורים, נקב או חשש נקב, פיטם ועוקץ, צבע צהוב, אתרוג קלבריה, לולב עם "קורא", עלה אמצעי פתוח מעט, 8 ס"מ באגד, הדס "כולו משולש" וערבה אדומה.</p>
+        ${srcChips([['C', 'אתרוג'], ['C', 'לולב'], ['C', 'פרטים נוספים']])}
         <div class="opts">${Object.entries(EDAH).map(([k, v]) => `<button class="ans${S.settings.edah === k ? ' sel' : ''}" data-act="setEdah" data-v="${k}"><span class="mk opt"></span><span>${v}</span></button>`).join('')}</div>`;
     }
     return '';

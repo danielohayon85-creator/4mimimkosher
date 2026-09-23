@@ -54,9 +54,23 @@ export function parseB(text) {
   return out;
 }
 
+// C: "## לולב" sections (Chabad quick guide) -> key "לולב"
+export function parseC(text) {
+  const out = {};
+  let cur = null;
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    const h = line.match(/^## (.+)$/);
+    if (h) { cur = out[h[1]] = { title: `מנהג חב"ד › ${h[1]}`, text: '' }; continue; }
+    if (cur && line) cur.text += (cur.text ? '\n' : '') + line;
+  }
+  return out;
+}
+
 export function loadSources(dir) {
   return {
     A: parseA(readFileSync(`${dir}/source-a.md`, 'utf8')),
     B: parseB(readFileSync(`${dir}/source-b.md`, 'utf8')),
+    C: parseC(readFileSync(`${dir}/source-c.md`, 'utf8')),
   };
 }
