@@ -1,6 +1,6 @@
 // Offline support: the app is a single self-contained index.html.
 // Bump VERSION on every release so phones pick up the new build.
-const VERSION = 'arba-minim-v4';
+const VERSION = 'arba-minim-v5';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', e => {
@@ -16,7 +16,8 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   // Pages: network first (fresh halachot/data), fall back to cache when offline.
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then(res => { caches.open(VERSION).then(c => c.put('./index.html', res.clone())); return res; })
+    // cache: 'no-cache' revalidates with the server, so the ~10 min HTTP cache of GitHub Pages never hides a release.
+    e.respondWith(fetch(req.url, { cache: 'no-cache' }).then(res => { caches.open(VERSION).then(c => c.put('./index.html', res.clone())); return res; })
       .catch(() => caches.match('./index.html')));
     return;
   }

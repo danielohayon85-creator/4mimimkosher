@@ -13,7 +13,7 @@ mkdirSync(new URL('./dist', import.meta.url), { recursive: true });
 writeFileSync(new URL('./dist/arba-minim.html', import.meta.url), html);
 // Standalone version for GitHub Pages (repo root): full document + PWA (manifest + offline service worker).
 const pwa = '<link rel="manifest" href="manifest.webmanifest">\n<link rel="icon" href="icon.svg" type="image/svg+xml">\n<link rel="apple-touch-icon" href="icon.svg">\n';
-const register = "<script>if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script>\n";
+const register = "<script>if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {}));</script>\n";
 const full = `<!doctype html>\n<html lang="he" dir="rtl">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n${pwa}` +
   html.replace('<div dir="rtl"', '</head>\n<body>\n<div dir="rtl"') + `\n${register}</body>\n</html>\n`;
 writeFileSync(new URL('./index.html', import.meta.url), full);
