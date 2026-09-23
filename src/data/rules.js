@@ -1,6 +1,6 @@
 // מאגר ההלכות — נגזר אך ורק משני המקורות שהודבקו.
-// מקור ב' (עיקר): src/sources/source-b.md, מפתח "לולב 1".
-// מקור א' (משלים): src/sources/source-a.md, מפתח "תרמה ד".
+// מקור ב' — ילקוט יוסף (עיקר): src/sources/source-b.md, מפתח "לולב 1".
+// מקור א' — אתר כושרות (משלים): src/sources/source-a.md, מפתח "תרמה ד".
 // lv: must | pasul | safek | hiddur | info
 // day1: הפסול חל רק ביום טוב ראשון (א › תרמח כח, ל)
 (function (AM) {

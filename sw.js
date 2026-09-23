@@ -1,6 +1,6 @@
 // Offline support: the app is a single self-contained index.html.
 // Bump VERSION on every release so phones pick up the new build.
-const VERSION = 'arba-minim-v5';
+const VERSION = 'arba-minim-v6';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', e => {
