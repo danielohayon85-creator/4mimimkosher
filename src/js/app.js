@@ -329,7 +329,8 @@
         <button class="row" data-act="quiz">${badge('set').replace(ic('bundle'), ic('target'))}<span><span class="t">בחן אותי</span><br><span class="s">10 תרחישים: כשר, פסול או ספק?</span></span>${chev}</button>
         <button class="row" data-act="sources">${badge('set').replace(ic('bundle'), ic('doc'))}<span><span class="t">המקורות</span><br><span class="s">הטקסטים המלאים, מילה במילה</span></span>${chev}</button>
       </div>
-      <div class="fine"><p>כל תשובה נגזרת משני המקורות שהוזנו בלבד. מקור ב' הוא העיקר; מקור א' משלים נושאים שמקור ב' אינו דן בהם, ומכריע כשמקור ב' מביא דעות בלי הכרעה. האפליקציה אינה תחליף לשאלת רב.</p></div>`;
+      <div class="fine"><p>כל תשובה נגזרת משני המקורות שהוזנו בלבד. מקור ב' הוא העיקר; מקור א' משלים נושאים שמקור ב' אינו דן בהם, ומכריע כשמקור ב' מביא דעות בלי הכרעה. האפליקציה אינה תחליף לשאלת רב.</p></div>
+      <footer class="credit">נבנה על ידי דניאל אוחיון לזיכוי הרבים, על בסיס מקורות הלכתיים מובהקים</footer>`;
   }
 
   function markOf(label) {

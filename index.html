@@ -137,6 +137,7 @@ h1, h2, h3 { text-wrap: balance; }
 .row .s { font-size: 13.5px; color: var(--ink-3); }
 .chev { color: var(--ink-3); width: 20px; height: 20px; }
 .fine { margin-top: 22px; padding-inline: 4px; font-size: 13px; color: var(--ink-3); display: grid; gap: 10px; }
+.credit { margin-top: 28px; padding: 16px 8px 8px; border-top: 1px solid var(--hair); text-align: center; font-size: 13.5px; font-weight: 500; color: var(--ink-2); text-wrap: balance; }
 .link { color: var(--primary); font-weight: 600; justify-self: start; min-height: 44px; }
 
 /* ── question ── */
@@ -1611,7 +1612,8 @@ AM.sources = {"A":{"תרמה א":{"title":"סימן תרמה (דיני לולב)
         <button class="row" data-act="quiz">${badge('set').replace(ic('bundle'), ic('target'))}<span><span class="t">בחן אותי</span><br><span class="s">10 תרחישים: כשר, פסול או ספק?</span></span>${chev}</button>
         <button class="row" data-act="sources">${badge('set').replace(ic('bundle'), ic('doc'))}<span><span class="t">המקורות</span><br><span class="s">הטקסטים המלאים, מילה במילה</span></span>${chev}</button>
       </div>
-      <div class="fine"><p>כל תשובה נגזרת משני המקורות שהוזנו בלבד. מקור ב' הוא העיקר; מקור א' משלים נושאים שמקור ב' אינו דן בהם, ומכריע כשמקור ב' מביא דעות בלי הכרעה. האפליקציה אינה תחליף לשאלת רב.</p></div>`;
+      <div class="fine"><p>כל תשובה נגזרת משני המקורות שהוזנו בלבד. מקור ב' הוא העיקר; מקור א' משלים נושאים שמקור ב' אינו דן בהם, ומכריע כשמקור ב' מביא דעות בלי הכרעה. האפליקציה אינה תחליף לשאלת רב.</p></div>
+      <footer class="credit">נבנה על ידי דניאל אוחיון לזיכוי הרבים, על בסיס מקורות הלכתיים מובהקים</footer>`;
   }
 
   function markOf(label) {
