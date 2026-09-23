@@ -250,7 +250,7 @@ details.rule .rb { padding: 0 14px 14px; display: grid; gap: 8px; font-size: 14.
 .lv.pasul { background: var(--bad-tint); color: var(--bad); }
 .lv.safek { background: var(--warn-tint); color: var(--warn); }
 .lv.hiddur { background: var(--gold-tint); color: var(--gold-ink); }
-.lv.info { background: var(--card-2); color: var(--ink-2); }
+.lv.info { display: inline; padding: 2px 7px; border-radius: 6px; font-size: 11.5px; background: var(--card-2); color: var(--ink-2); }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chipx { font-size: 13.5px; font-weight: 600; border-radius: 10px; padding: 6px 10px; background: var(--bad-tint); color: var(--bad); }
 .chipx.S { background: var(--warn-tint); color: var(--warn); }
